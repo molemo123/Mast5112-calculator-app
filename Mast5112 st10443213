@@ -1,0 +1,119 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+
+const App = () => {
+  const [num1, setNum1] = useState('');
+  const [num2, setNum2] = useState('');
+  const [result, setResult] = useState(null);
+
+  const handleCalculation = (operation) => {
+    const number1 = parseFloat(num1);
+    const number2 = parseFloat(num2);
+
+    if (isNaN(number1) || (isNaN(number2) && operation !== 'sqrt')) {
+      Alert.alert('Error', 'Please enter valid numbers');
+      setResult(null);
+      return;
+    }
+
+    let res;
+    switch (operation) {
+      case 'add':
+        res = number1 + number2;
+        break;
+      case 'subtract':
+        res = number1 - number2;
+        break;
+      case 'multiply':
+        res = number1 * number2;
+        break;
+      case 'divide':
+        if (number2 === 0) {
+          Alert.alert('Error', 'Cannot divide by zero');
+          return;
+        }
+        res = number1 / number2;
+        break;
+      case 'power':
+        res = Math.pow(number1, number2);
+        break;
+      case 'sqrt':
+        res = Math.sqrt(number1);
+        break;
+      default:
+        res = 'Invalid operation';
+    }
+    setResult(res);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Calculator App</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter first number"
+        keyboardType="numeric"
+        value={num1}
+        onChangeText={setNum1}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter second number"
+        keyboardType="numeric"
+        value={num2}
+        onChangeText={setNum2}
+        editable={result === null || result === 'Invalid operation'}
+      />
+      <View style={styles.buttonsContainer}>
+        <Button title="Add" onPress={() => handleCalculation('add')} />
+        <Button title="Subtract" onPress={() => handleCalculation('subtract')} />
+        <Button title="Multiply" onPress={() => handleCalculation('multiply')} />
+        <Button title="Divide" onPress={() => handleCalculation('divide')} />
+        <Button title="To the Power Of" onPress={() => handleCalculation('power')} />
+        <Button title="Square Root" onPress={() => handleCalculation('sqrt')} />
+      </View>
+      {result !== null && (
+        <Text style={styles.result}>
+          Result: {result}
+        </Text>
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+    backgroundColor: 'purple',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  input: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+    backgroundColor: '#fff',
+  },
+  buttonsContainer: {
+    marginVertical: 20,
+    justifyContent: 'space between',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+  },
+  result: {
+    marginTop: 20,
+    fontSize: 20,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+});
+
+export default App;
